@@ -1,0 +1,51 @@
+INFO:root:Length of test dataset:32
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing train...
+INFO:root:Overview results:
+INFO:root:loss: 25679.856750 base_loss: 24646.972290 consist_loss: 1032.884377 cd_l1: 15935.790344 cd_l2: 23105.998413 cs: 0.684862 mapping_error: 15409.739380 
+INFO:root:Length of test dataset:4
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing val...
+INFO:root:Overview results:
+INFO:root:loss: 31676.832031 base_loss: 30374.875000 consist_loss: 1301.956909 cd_l1: 17367.230957 cd_l2: 27972.802734 cs: 0.842527 mapping_error: 24020.717773 
+INFO:root:Length of test dataset:4
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing test...
+INFO:root:Overview results:
+INFO:root:loss: 21744.728027 base_loss: 20657.098633 consist_loss: 1087.629578 cd_l1: 14335.076172 cd_l2: 18918.083008 cs: 0.516929 mapping_error: 17390.155273 
+INFO:root:Length of test dataset:32
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing train...
+INFO:root:Length of test dataset:32
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing train...
+INFO:root:Overview results:
+INFO:root:loss: 25712.217346 base_loss: 24665.746887 consist_loss: 1046.470470 cd_l1: 15939.895142 cd_l2: 23115.893372 cs: 0.683708 mapping_error: 15498.535400 
+INFO:root:Length of test dataset:4
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing val...
+INFO:root:Overview results:
+INFO:root:loss: 32077.778320 base_loss: 30494.230469 consist_loss: 1583.547607 cd_l1: 17349.350098 cd_l2: 28030.079102 cs: 0.844744 mapping_error: 24641.518555 
+INFO:root:Length of test dataset:4
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing test...
+INFO:root:Overview results:
+INFO:root:loss: 21245.117188 base_loss: 20358.770996 consist_loss: 886.346741 cd_l1: 14264.599609 cd_l2: 18648.835938 cs: 0.518240 mapping_error: 17099.351074 
+INFO:root:Length of test dataset:32
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing train...
+INFO:root:Length of test dataset:32
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing train...
+INFO:root:Overview results:
+INFO:root:loss: 39463.877808 base_loss: 38214.354401 consist_loss: 1249.523537 cd_l1: 27120.767395 cd_l2: 36774.484802 mapping_error: 14398.698593 
+INFO:root:Length of test dataset:4
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing val...
+INFO:root:Overview results:
+INFO:root:loss: 48279.839844 base_loss: 46192.385254 consist_loss: 2087.454361 cd_l1: 29761.448730 cd_l2: 44860.583008 mapping_error: 13318.010254 
+INFO:root:Length of test dataset:4
+INFO:root:point2ssm++'s previous weights loaded.
+INFO:root:Testing test...
+INFO:root:Overview results:
+INFO:root:loss: 33221.966309 base_loss: 31261.660156 consist_loss: 1960.306480 cd_l1: 24073.566406 cd_l2: 29405.672363 mapping_error: 18559.878662 

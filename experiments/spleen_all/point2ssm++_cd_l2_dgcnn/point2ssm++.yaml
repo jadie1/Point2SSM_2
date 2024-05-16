@@ -1,0 +1,50 @@
+!munch.Munch
+batch_size: 4
+best_model_path: experiments/spleen_all/point2ssm++_cd_l2_dgcnn/best_network.pth
+betas: 0.9, 0.999
+cd_loss: cd_l2
+consistency_loss_weight: 1
+consistency_rotation_range: 15
+consistency_start_epoch: 0
+cs_bandwidth: 1
+device: cuda:2
+dgcnn_k: 27
+early_stop: true
+early_stop_patience: 100
+early_stop_start: 0
+encoder: dgcnn
+epoch_interval_to_save: 10
+epoch_interval_to_val: 1
+latent_dim: 128
+load_model: null
+log_metrics:
+- loss
+- base_loss
+- consist_loss
+- cd_l1
+- cd_l2
+- mapping_error
+lr: 0.0001
+lr_decay: false
+manual_seed: null
+mapping_error_weight: 0.1
+missing_percent: null
+model_name: point2ssm++
+nepoch: 3000
+noise_level: null
+num_input_points: 1024
+num_output_points: 1024
+optimizer: Adam
+rot_range: null
+rotation_equivarince: true
+sampling_invariance: true
+save_predictions: true
+scale: false
+start_epoch: 0
+step_interval_to_print: 400
+train_datasets:
+- spleen
+train_subset_size: null
+weight_decay: 0
+work_dir: experiments/dynamic_neighs/
+workers: 0
