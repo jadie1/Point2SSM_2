@@ -11,7 +11,6 @@ import importlib
 from utils.loss_utils import calc_cd, get_lightweight_mapping_error_loss
 from utils.train_utils import get_random_rot
 from models.encoders_4d import DGCNN_encoder, PSTnet2_encoder, RFNet_4D_encoder, CrossSectional_DGCNN_encoder
-from models.point2ssm import Attention_Module
 
 MSE_loss = nn.MSELoss(reduction='sum')
 
@@ -24,7 +23,6 @@ class Model(nn.Module):
         self.cd_loss = args.cd_loss
         self.device = args.device
         self.mapping_error_weight = args.mapping_error_weight
-        self.cs_bandwidth = args.cs_bandwidth
         self.dgcnn_k = args.dgcnn_k
 
         self.consistency_start_epoch = args.consistency_start_epoch
@@ -119,4 +117,76 @@ class Model(nn.Module):
 
         return {'pred': pred, 'loss':loss, 'base_loss':base_loss, 'consist_loss':consist_loss, 'cd_l1': cd_l1, 'cd_l2': cd_l2, 'mapping_error':mapping_error_loss}
 
+class Attention_Module(nn.Module):
+    def __init__(self, latent_dim, num_output, intermediate_dim=None):
+        super(Attention_Module, self).__init__()
+        self.num_output = num_output
+        self.latent_dim = latent_dim
+        if intermediate_dim is None:
+            self.intermediate_dim = num_output
+        else:
+            self.intermediate_dim = intermediate_dim
 
+        self.sa1 = cross_transformer(self.latent_dim,self.intermediate_dim)
+        self.sa2 = cross_transformer(self.intermediate_dim,self.intermediate_dim)
+        self.sa3 = cross_transformer(self.intermediate_dim,self.num_output)
+        self.softmax = nn.Softmax(dim=2)        
+
+    def forward(self, x):
+        x = self.sa1(x,x)
+        x = self.sa2(x,x)
+        x = self.sa3(x,x)
+        prob_map = self.softmax(x)
+        return prob_map
+
+
+# PointAttN: You Only Need Attention for Point Cloud Completion
+# https://github.com/ohhhyeahhh/PointAttN
+class cross_transformer(nn.Module):
+    def __init__(self, d_model=256, d_model_out=256, nhead=4, dim_feedforward=1024, dropout=0.0):
+        super().__init__()
+        self.multihead_attn1 = nn.MultiheadAttention(d_model_out, nhead, dropout=dropout)
+        # Implementation of Feedforward model
+        self.linear11 = nn.Linear(d_model_out, dim_feedforward)
+        self.dropout1 = nn.Dropout(dropout)
+        self.linear12 = nn.Linear(dim_feedforward, d_model_out)
+
+        self.norm12 = nn.LayerNorm(d_model_out)
+        self.norm13 = nn.LayerNorm(d_model_out)
+
+        self.dropout12 = nn.Dropout(dropout)
+        self.dropout13 = nn.Dropout(dropout)
+
+        self.activation1 = torch.nn.GELU()
+
+        self.input_proj = nn.Conv1d(d_model, d_model_out, kernel_size=1)
+
+    def with_pos_embed(self, tensor, pos):
+        return tensor if pos is None else tensor + pos
+
+    # transformer
+    def forward(self, src1, src2, if_act=False):
+        src1 = self.input_proj(src1)
+        src2 = self.input_proj(src2)
+
+        b, c, _ = src1.shape
+
+        src1 = src1.reshape(b, c, -1).permute(2, 0, 1)
+        src2 = src2.reshape(b, c, -1).permute(2, 0, 1)
+
+        src1 = self.norm13(src1)
+        src2 = self.norm13(src2)
+
+        src12 = self.multihead_attn1(query=src1,
+                                     key=src2,
+                                     value=src2)[0]
+
+        src1 = src1 + self.dropout12(src12)
+        src1 = self.norm12(src1)
+
+        src12 = self.linear12(self.dropout1(self.activation1(self.linear11(src1))))
+        src1 = src1 + self.dropout13(src12)
+
+        src1 = src1.permute(1, 2, 0)
+
+        return src1

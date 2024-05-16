@@ -154,13 +154,6 @@ class PC_Sequence_Dataset(data.Dataset):
         self.names = [names[i:i + self.num_time_points] for i in range(0, len(names), self.num_time_points)] 
         self.labels = [labels[i:i + self.num_time_points] for i in range(0, len(labels), self.num_time_points)] 
 
-        # Debug
-        for i in range(len(self.names)):
-            for j in range(self.num_time_points):
-                name = self.names[i][j]
-                pts = self.point_set_seqs[i][j]
-                np.savetxt('debug/test/'+name+'.particles', pts)
-
     def __getitem__(self, index):
         point_seq = self.point_set_seqs[index]
         name = self.names[index]

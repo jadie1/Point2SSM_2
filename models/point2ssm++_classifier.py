@@ -10,10 +10,8 @@ import importlib
 
 from models.ae import PointNet_encoder
 from models.dgcnn import DGCNN_encoder
-from utils.loss_utils import calc_cd, repeat_calc_cd
+from utils.loss_utils import calc_cd
 from utils.loss_utils import get_mapping_error_loss
-from utils.loss_utils import cs_divergence, repeat_cs_divergence
-from utils.loss_utils import get_SWD_loss, repeat_get_SWD_loss
 
 MSE_loss = nn.MSELoss(reduction='sum')
 
@@ -26,9 +24,8 @@ class Model(nn.Module):
         self.cd_loss = args.cd_loss
         self.device = args.device
         self.mapping_error_weight = args.mapping_error_weight
-        self.cs_bandwidth = args.cs_bandwidth
-        self.cls_weight = args.cls_weight
         self.num_classes = len(args.train_datasets)
+        self.cls_weight = args.cls_weight
 
         self.consistency_start_epoch = args.consistency_start_epoch
         self.resample = args.sampling_invariance
@@ -130,20 +127,11 @@ class Model(nn.Module):
 
         # Calculate base loss
         cd_l1, cd_l2 = calc_cd(full_pred, full_gt)
-        cs = cs_divergence(full_pred, full_gt, self.cs_bandwidth)
         mapping_error_loss = get_mapping_error_loss(full_pred, full_labels*0, 10)
         if self.cd_loss == 'cd_l1':
             cd_loss = cd_l1.mean()
         elif self.cd_loss == 'cd_l2':
             cd_loss = cd_l2.mean()
-        elif self.cd_loss == 'fps_cd':
-            downsampled_gt, _ = pytorch3d.ops.sample_farthest_points(full_gt, K=full_pred.shape[1])
-            fps_cd_l1, fps_cd_l2 = calc_cd(full_pred, downsampled_gt)
-            cd_loss = fps_cd_l2.mean()
-        elif self.cd_loss == 'cs':
-            cd_loss = cs.mean()
-        elif self.cd_loss == 'swd':
-            cd_loss = get_SWD_loss(full_pred, full_gt).mean()
         base_loss = cd_loss + self.mapping_error_weight*mapping_error_loss
 
         # Get consistency loss
@@ -163,7 +151,7 @@ class Model(nn.Module):
         else:
             loss = base_loss + self.consistency_loss_weight*consist_loss + self.cls_weight*cls_loss
 
-        return {'pred': pred, 'loss':loss, 'base_loss':base_loss, 'consist_loss':consist_loss, 'cd_l1': cd_l1, 'cd_l2': cd_l2, 'cs':cs, 'mapping_error':mapping_error_loss, 'cls_loss': cls_loss}
+        return {'pred': pred, 'loss':loss, 'base_loss':base_loss, 'consist_loss':consist_loss, 'cd_l1': cd_l1, 'cd_l2': cd_l2, 'mapping_error':mapping_error_loss, 'cls_loss': cls_loss}
 
 class Classification_Module(nn.Module):
     def __init__(self, input_dim, num_classes):
