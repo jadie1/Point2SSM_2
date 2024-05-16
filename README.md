@@ -11,7 +11,7 @@ To run inference, call `consist_test.py` with the config file and dataset, for e
 ```
 python consist_test.py -c experiments/spleen_all/point2ssm++_cd_l2_dgcnn/point2ssm++.yaml -d spleen
 ```
-This will write the predicted correspondence points to the experiment directory in `output/`. 
+This will write the predicted correspondence points to the experiment directory, for example `experiments/spleen_all/point2ssm++_cd_l2_dgcnn/spleen/test/output/`. 
 
 
 See `cfgs/point2ssm++_4d.yaml` for an example with 4D/spatiotemporal data, and `cfgs/point2ssm++_classifier.yaml` for multi-anatomy data. 
