@@ -1,7 +1,7 @@
 # Point2SSM++
-Point2SSM++: Self-Supervised Learning of Anatomical Shape Models from Point Clouds
+Implementation of [Point2SSM++: Self-Supervised Learning of Anatomical Shape Models from Point Clouds](https://arxiv.org/abs/2405.09707).  If using this code, please cite the paper.
 
-The run training by calling 'train.py' with a specificed config file, for example:
+Run training by calling 'train.py' with a specificed config file, for example:
 ```
 python train.py -c cfgs/point2ssm++.yaml
 ```
